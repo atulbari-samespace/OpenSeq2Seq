@@ -33,11 +33,6 @@ std::vector<std::pair<double, std::string>> ctc_beam_search_decoder(
                    "the shape of the vocabulary");
   }
 
-  size_t num_hot_words = hot_words.size();
-  for (size_t i = 0; i < num_hot_words; ++i) {
-    
-  }
-
   // assign blank id
   size_t blank_id = vocabulary.size();
   // assign space id
@@ -383,7 +378,15 @@ std::vector<std::pair<double, std::string>> BeamDecoder::decode(const std::vecto
             float score = 0.0;
             std::vector<std::string> ngram;
             ngram = ext_scorer->make_ngram(prefix_to_score);
-            score = ext_scorer->get_log_cond_prob(ngram) * ext_scorer->alpha;
+            float hot_boost = 0.0;
+            for (std::string word : ngram) {
+              for ( std::vector<std::pair<float, std::string> >::const_iterator it = hot_words.begin() ; it != hot_words.end; it++){
+                  if(it->second == word) {
+                    hot_boost += it->first;
+                  }
+              }
+            }
+            score = (ext_scorer->get_log_cond_prob(ngram) + hot_boost) * ext_scorer->alpha;
             log_p += score;
             log_p += ext_scorer->beta;
           }
