@@ -122,7 +122,15 @@ std::vector<std::pair<double, std::string>> ctc_beam_search_decoder(
             float score = 0.0;
             std::vector<std::string> ngram;
             ngram = ext_scorer->make_ngram(prefix_to_score);
-            score = ext_scorer->get_log_cond_prob(ngram) * ext_scorer->alpha;
+            float hot_boost = 0.0;
+            for (std::string word : ngram) {
+              for ( std::vector<std::pair<float, std::string> >::const_iterator it = hot_words.begin() ; it != hot_words.end(); it++){
+                  // if(it->second == word) {
+                  //   hot_boost += it->first;
+                  // }
+              }
+            }
+            score = (ext_scorer->get_log_cond_prob(ngram) + hot_boost) * ext_scorer->alpha;
             log_p += score;
             log_p += ext_scorer->beta;
           }
@@ -156,7 +164,15 @@ std::vector<std::pair<double, std::string>> ctc_beam_search_decoder(
       if (!prefix->is_empty() && prefix->character != space_id) {
         float score = 0.0;
         std::vector<std::string> ngram = ext_scorer->make_ngram(prefix);
-        score = ext_scorer->get_log_cond_prob(ngram) * ext_scorer->alpha;
+        float hot_boost = 0.0;
+        for (std::string word : ngram) {
+          for ( std::vector<std::pair<float, std::string> >::const_iterator it = hot_words.begin() ; it != hot_words.end(); it++){
+                  // if(it->second == word) {
+                  //   hot_boost += it->first;
+                  // }
+           }
+        }
+        score = (ext_scorer->get_log_cond_prob(ngram) + hot_boost) * ext_scorer->alpha;
         score += ext_scorer->beta;
         prefix->score += score;
       }
@@ -378,18 +394,7 @@ std::vector<std::pair<double, std::string>> BeamDecoder::decode(const std::vecto
             float score = 0.0;
             std::vector<std::string> ngram;
             ngram = ext_scorer->make_ngram(prefix_to_score);
-            float hot_boost = 0.0;
-            for (std::string word : ngram) {
-              for ( std::vector<std::pair<float, std::string> >::const_iterator it = hot_words.begin() ; it != hot_words.end(); it++){
-                  // if(it->second == word) {
-                  //   hot_boost += it->first;
-                  // }
-                  if((it->second.compare(word)) == 0) {
-                      hot_boost += it->first;
-                  }
-              }
-            }
-            score = (ext_scorer->get_log_cond_prob(ngram) + hot_boost) * ext_scorer->alpha;
+            score = ext_scorer->get_log_cond_prob(ngram) * ext_scorer->alpha;
             log_p += score;
             log_p += ext_scorer->beta;
           }
