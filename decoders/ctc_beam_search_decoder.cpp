@@ -125,9 +125,9 @@ std::vector<std::pair<double, std::string>> ctc_beam_search_decoder(
             float hot_boost = 0.0;
             for (std::string word : ngram) {
               for ( std::vector<std::pair<float, std::string> >::const_iterator it = hot_words.begin() ; it != hot_words.end(); it++){
-                  // if(it->second == word) {
-                  //   hot_boost += it->first;
-                  // }
+                  if(it->second == word) {
+                    hot_boost += it->first;
+                  }
               }
             }
             score = (ext_scorer->get_log_cond_prob(ngram) + hot_boost) * ext_scorer->alpha;
@@ -167,9 +167,9 @@ std::vector<std::pair<double, std::string>> ctc_beam_search_decoder(
         float hot_boost = 0.0;
         for (std::string word : ngram) {
           for ( std::vector<std::pair<float, std::string> >::const_iterator it = hot_words.begin() ; it != hot_words.end(); it++){
-                  // if(it->second == word) {
-                  //   hot_boost += it->first;
-                  // }
+                  if(it->second == word) {
+                    hot_boost += it->first;
+                  }
            }
         }
         score = (ext_scorer->get_log_cond_prob(ngram) + hot_boost) * ext_scorer->alpha;
