@@ -384,6 +384,9 @@ std::vector<std::pair<double, std::string>> BeamDecoder::decode(const std::vecto
                   // if(it->second == word) {
                   //   hot_boost += it->first;
                   // }
+                  if((it->second.compare(word)) == 0) {
+                      hot_boost += it->first;
+                  }
               }
             }
             score = (ext_scorer->get_log_cond_prob(ngram) + hot_boost) * ext_scorer->alpha;
