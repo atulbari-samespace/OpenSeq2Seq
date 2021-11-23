@@ -380,7 +380,7 @@ std::vector<std::pair<double, std::string>> BeamDecoder::decode(const std::vecto
             ngram = ext_scorer->make_ngram(prefix_to_score);
             float hot_boost = 0.0;
             for (std::string word : ngram) {
-              for ( std::vector<std::pair<float, std::string> >::const_iterator it = hot_words.begin() ; it != hot_words.end; it++){
+              for ( std::vector<std::pair<float, std::string> >::const_iterator it = hot_words.begin() ; it != hot_words.end(); it++){
                   if(it->second == word) {
                     hot_boost += it->first;
                   }
