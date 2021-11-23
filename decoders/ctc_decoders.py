@@ -63,10 +63,10 @@ def ctc_greedy_decoder(probs_seq, vocabulary):
 def ctc_beam_search_decoder(probs_seq,
                             vocabulary,
                             beam_size,
+                            hot_words,
                             cutoff_prob=1.0,
                             cutoff_top_n=40,
-                            ext_scoring_func=None,
-                            hot_words=None):
+                            ext_scoring_func=None):
     """Wrapper for the CTC Beam Search Decoder.
 
     :param probs_seq: 2-D list of probability distributions over each time
@@ -93,8 +93,8 @@ def ctc_beam_search_decoder(probs_seq,
     :rtype: list
     """
     beam_results = swig_decoders.ctc_beam_search_decoder(
-        probs_seq.tolist(), vocabulary, beam_size, cutoff_prob, cutoff_top_n,
-        ext_scoring_func, hot_words.encode())
+        probs_seq.tolist(), vocabulary, beam_size, hot_words, cutoff_prob, cutoff_top_n,
+        ext_scoring_func)
     beam_results = [(res[0], res[1]) for res in beam_results]
     return beam_results
 
@@ -103,10 +103,10 @@ def ctc_beam_search_decoder_batch(probs_split,
                                   vocabulary,
                                   beam_size,
                                   num_processes,
+                                  hot_words,
                                   cutoff_prob=1.0,
                                   cutoff_top_n=40,
-                                  ext_scoring_func=None,
-                                  hot_words=None):
+                                  ext_scoring_func=None):
     """Wrapper for the batched CTC beam search decoder.
 
     :param probs_seq: 3-D list with each element as an instance of 2-D list
@@ -138,8 +138,8 @@ def ctc_beam_search_decoder_batch(probs_split,
     probs_split = [probs_seq.tolist() for probs_seq in probs_split]
 
     batch_beam_results = swig_decoders.ctc_beam_search_decoder_batch(
-        probs_split, vocabulary, beam_size, num_processes, cutoff_prob,
-        cutoff_top_n, ext_scoring_func, hot_words.encode())
+        probs_split, vocabulary, beam_size, num_processes, hot_words, cutoff_prob,
+        cutoff_top_n, ext_scoring_func)
     batch_beam_results = [
         [(res[0], res[1]) for res in beam_results]
         for beam_results in batch_beam_results
