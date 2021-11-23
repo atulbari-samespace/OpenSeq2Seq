@@ -33,9 +33,13 @@ std::vector<std::pair<double, std::string>> ctc_beam_search_decoder(
                    "the shape of the vocabulary");
   }
 
+  size_t num_hot_words = hot_words.size();
+  for (size_t i = 0; i < num_hot_words; ++i) {
+    
+  }
+
   // assign blank id
   size_t blank_id = vocabulary.size();
-
   // assign space id
   auto it = std::find(vocabulary.begin(), vocabulary.end(), " ");
   int space_id = it - vocabulary.begin();
